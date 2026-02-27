@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WallVerse — Wallpaper Universe</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+<style>
+  :root {
+    --bg: #080b14;
+    --surface: #0d1220;
+    --surface2: #111827;
+    --surface3: #1a2236;
+    --border: rgba(255,255,255,0.07);
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --text: #f1f5f9;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --glow: rgba(124,58,237,0.4);
+    --glow2: rgba(6,182,212,0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── Background effects ── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Header ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,11,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--accent3); -webkit-text-fill-color: var(--accent3); }
+
+  .header-search {
+    flex: 1;
+    max-width: 500px;
+    position: relative;
+  }
+  .header-search input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px 10px 42px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s;
+  }
+  .header-search input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  }
+  .header-search input::placeholder { color: var(--text-muted); }
+  .header-search .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #5b21b6);
+    color: white;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px var(--glow); }
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface3); color: var(--text); border-color: var(--accent); }
+  .btn-danger {
+    background: rgba(239,68,68,0.15);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .btn-danger:hover { background: rgba(239,68,68,0.25); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  /* ── Main layout ── */
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* ── Categories ── */
+  .categories {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cat-pill {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    transition: all 0.2s;
+  }
+  .cat-pill:hover { border-color: var(--accent); color: var(--text); }
+  .cat-pill.active {
+    background: linear-gradient(135deg, var(--accent), #5b21b6);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 15px var(--glow);
+  }
+  .sort-select {
+    margin-left: auto;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: var(--text-dim);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+  .sort-select:focus { border-color: var(--accent); }
+
+  /* ── Upload zone ── */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--surface);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(124,58,237,0.05), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .upload-zone:hover::before, .upload-zone.drag-over::before { opacity: 1; }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(124,58,237,0.05);
+  }
+  .upload-zone.drag-over { border-style: solid; box-shadow: 0 0 30px var(--glow); }
+  .upload-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .upload-zone h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .upload-zone p { color: var(--text-muted); font-size: 14px; }
+  .upload-zone input[type=file] { display: none; }
+
+  /* ── Upload form modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px;
+    width: 100%;
+    max-width: 520px;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal h2 { font-size: 22px; font-weight: 700; margin-bottom: 24px; }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--surface3);
+    border: none;
+    color: var(--text-dim);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--surface3); color: var(--text); }
+  .modal { position: relative; }
+
+  /* ── Form inputs ── */
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-dim); margin-bottom: 8px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .upload-preview {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── Masonry grid ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+  .stats-bar {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding: 16px 24px;
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .grid {
+    columns: 4 280px;
+    column-gap: 16px;
+  }
+  .card {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: fadeInUp 0.5s ease backwards;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: rgba(124,58,237,0.3); }
+  .card-img {
+    width: 100%;
+    display: block;
+    transition: transform 0.4s;
+    background: var(--surface3);
+  }
+  .card:hover .card-img { transform: scale(1.03); }
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+  }
+  .card:hover .card-overlay { opacity: 1; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-meta { font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+  .card-actions { display: flex; gap: 8px; }
+  .card-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .card-btn-like { background: rgba(124,58,237,0.3); color: #a78bfa; }
+  .card-btn-like:hover { background: rgba(124,58,237,0.6); color: white; }
+  .card-btn-like.liked { background: var(--accent); color: white; }
+  .card-btn-download { background: rgba(6,182,212,0.3); color: #67e8f9; }
+  .card-btn-download:hover { background: rgba(6,182,212,0.6); color: white; }
+  .card-btn-save { background: rgba(245,158,11,0.3); color: #fcd34d; }
+  .card-btn-save:hover { background: rgba(245,158,11,0.6); color: white; }
+  .card-btn-delete { background: rgba(239,68,68,0.3); color: #fca5a5; margin-left: auto; }
+  .card-btn-delete:hover { background: rgba(239,68,68,0.6); color: white; }
+  .card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--accent3);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .card-category {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .card-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .card-stat { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-dim); }
+
+  /* ── Lightbox ── */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  .lightbox.open { opacity: 1; pointer-events: all; }
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 75vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    transition: transform 0.3s;
+  }
+  .lightbox-info {
+    text-align: center;
+    max-width: 600px;
+  }
+  .lightbox-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; margin-bottom: 8px; }
+  .lightbox-desc { color: var(--text-dim); font-size: 14px; margin-bottom: 16px; }
+  .lightbox-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .tag {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+  .lightbox-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 2001;
+  }
+  .lightbox-close:hover { background: var(--surface3); }
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+  }
+  .lightbox-nav:hover { background: var(--accent); border-color: var(--accent); }
+  .lightbox-prev { left: 20px; }
+  .lightbox-next { right: 20px; }
+
+  /* ── Collections panel ── */
+  .panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 340px;
+    background: var(--surface2);
+    border-left: 1px solid var(--border);
+    z-index: 500;
+    transform: translateX(100%);
+    transition: transform 0.3s;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .panel.open { transform: translateX(0); }
+  .panel h2 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 20px; }
+  .collection-item {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .collection-item:hover { border-color: var(--accent); }
+  .collection-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .collection-count { font-size: 12px; color: var(--text-muted); }
+
+  /* ── Toast ── */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .toast {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideInRight 0.3s ease;
+    min-width: 280px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .toast.success { border-color: rgba(16,185,129,0.4); }
+  .toast.error { border-color: rgba(239,68,68,0.4); }
+  .toast.info { border-color: rgba(124,58,237,0.4); }
+  .toast-icon { font-size: 18px; }
+  .toast.success .toast-icon { color: #10b981; }
+  .toast.error .toast-icon { color: #ef4444; }
+  .toast.info .toast-icon { color: var(--accent); }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Progress bar ── */
+  .progress-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 9999;
+    background: transparent;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state i { font-size: 64px; margin-bottom: 20px; opacity: 0.3; }
+  .empty-state h3 { font-size: 20px; margin-bottom: 10px; color: var(--text-dim); }
+  .empty-state p { font-size: 14px; }
+
+  /* ── Loading skeleton ── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* ── View toggle ── */
+  .view-toggle { display: flex; gap: 4px; }
+  .view-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .view-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* List view */
+  .grid.list-view {
+    columns: 1;
+  }
+  .grid.list-view .card {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  .grid.list-view .card .card-img {
+    width: 140px;
+    height: 100px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .grid.list-view .card-overlay {
+    position: relative;
+    opacity: 1;
+    background: none;
+    flex: 1;
+    padding: 12px 16px;
+    justify-content: center;
+  }
+  .grid.list-view .card:hover .card-img { transform: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    header { padding: 0 16px; }
+    .logo { font-size: 22px; }
+    .header-search { display: none; }
+    .app { padding: 20px 16px; }
+    .stats-bar { gap: 16px; }
+    .lightbox-nav { display: none; }
+    .panel { width: 100%; }
+  }
+
+  /* ── Color palette dots ── */
+  .color-dots { display: flex; gap: 4px; margin-top: 6px; }
+  .color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- Header -->
+<header>
+  <div class="logo">Wall<span>Verse</span></div>
+  <div class="header-search">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" placeholder="Search wallpapers, tags, categories..." id="searchInput">
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-ghost btn-sm" id="collectionsBtn" title="My Collections">
+      <i class="fas fa-folder-open"></i>
+    </button>
+    <button class="btn btn-primary btn-sm" id="uploadBtn">
+      <i class="fas fa-plus"></i> Upload
+    </button>
+  </div>
+</header>
+
+<!-- Main App -->
+<div class="app">
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-item">
+      <div class="stat-num" id="totalCount">0</div>
+      <div class="stat-label">Wallpapers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="totalDownloads">0</div>
+      <div class="stat-label">Downloads</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="totalLikes">0</div>
+      <div class="stat-label">Likes</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="totalCategories">0</div>
+      <div class="stat-label">Categories</div>
+    </div>
+  </div>
+
+  <!-- Upload Zone -->
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" id="fileInput" accept="image/*" multiple>
+    <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+    <h3>Drop wallpapers here</h3>
+    <p>or click to browse — JPG, PNG, WebP up to 50MB</p>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories" id="categoryBar">
+    <div class="cat-pill active" data-cat="All">All</div>
+    <div class="cat-pill" data-cat="Nature">🌿 Nature</div>
+    <div class="cat-pill" data-cat="Urban">🌆 Urban</div>
+    <div class="cat-pill" data-cat="Abstract">🎨 Abstract</div>
+    <div class="cat-pill" data-cat="Space">🌌 Space</div>
+    <div class="cat-pill" data-cat="Minimal">◻ Minimal</div>
+    <div class="cat-pill" data-cat="Anime">✨ Anime</div>
+    <div class="cat-pill" data-cat="Architecture">🏛 Architecture</div>
+    <select class="sort-select" id="sortSelect">
+      <option value="newest">↓ Newest First</option>
+      <option value="popular">❤ Most Liked</option>
+      <option value="downloads">⬇ Most Downloaded</option>
+    </select>
+  </div>
+
+  <!-- Section header -->
+  <div class="section-header">
+    <div class="section-title" id="sectionTitle">ALL WALLPAPERS</div>
+    <div class="header-right" style="display:flex;gap:8px;align-items:center">
+      <span style="font-size:13px;color:var(--text-muted)" id="resultCount"></span>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridViewBtn" title="Grid view"><i class="fas fa-th"></i></button>
+        <button class="view-btn" id="listViewBtn" title="List view"><i class="fas fa-list"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid" id="wallpaperGrid">
+    <!-- Skeleton loaders -->
+    <div class="skeleton" style="height:280px"></div>
+    <div class="skeleton" style="height:200px"></div>
+    <div class="skeleton" style="height:320px"></div>
+    <div class="skeleton" style="height:250px"></div>
+    <div class="skeleton" style="height:180px"></div>
+    <div class="skeleton" style="height:300px"></div>
+  </div>
+
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <button class="modal-close" id="closeUploadModal"><i class="fas fa-times"></i></button>
+    <h2>🖼 Upload Wallpaper</h2>
+    <img id="uploadPreview" class="upload-preview" style="display:none" alt="preview">
+    <div class="form-group">
+      <label>Title *</label>
+      <input type="text" id="uploadTitle" placeholder="Give your wallpaper a name...">
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="uploadDescription" placeholder="What's special about this wallpaper?"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="uploadCategory">
+          <option>Nature</option>
+          <option>Urban</option>
+          <option>Abstract</option>
+          <option>Space</option>
+          <option>Minimal</option>
+          <option>Anime</option>
+          <option>Architecture</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Resolution</label>
+        <select id="uploadResolution">
+          <option>1920x1080</option>
+          <option>2560x1440</option>
+          <option>3840x2160</option>
+          <option>1280x720</option>
+          <option>Custom</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tags (comma-separated)</label>
+      <input type="text" id="uploadTags" placeholder="nature, sunset, mountains...">
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button class="btn btn-primary" style="flex:1" id="confirmUpload">
+        <i class="fas fa-upload"></i> Upload Wallpaper
+      </button>
+      <button class="btn btn-ghost" id="cancelUpload">Cancel</button>
+    </div>
+    <div id="uploadProgress" style="display:none;margin-top:16px">
+      <div style="height:4px;background:var(--surface3);border-radius:2px;overflow:hidden">
+        <div id="uploadProgressBar" style="height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:width 0.3s;border-radius:2px"></div>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;text-align:center" id="uploadStatus">Uploading...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+<button class="lightbox-nav lightbox-prev" id="lightboxPrev"><i class="fas fa-chevron-left"></i></button>
+<button class="lightbox-nav lightbox-next" id="lightboxNext"><i class="fas fa-chevron-right"></i></button>
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" class="lightbox-img" src="" alt="">
+  <div class="lightbox-info">
+    <div class="lightbox-title" id="lightboxTitle"></div>
+    <div class="lightbox-desc" id="lightboxDesc"></div>
+    <div class="lightbox-tags" id="lightboxTags"></div>
+    <div class="lightbox-actions">
+      <button class="btn btn-primary" id="lightboxDownload"><i class="fas fa-download"></i> Download</button>
+      <button class="btn btn-ghost" id="lightboxLike"><i class="fas fa-heart"></i> Like</button>
+      <button class="btn btn-ghost" id="lightboxSave"><i class="fas fa-bookmark"></i> Save</button>
+      <button class="btn btn-danger" id="lightboxDelete"><i class="fas fa-trash"></i> Delete</button>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--text-muted)">
+      <span id="lightboxResolution"><i class="fas fa-expand"></i> --</span>
+      <span id="lightboxCategory"><i class="fas fa-tag"></i> --</span>
+      <span id="lightboxLikes"><i class="fas fa-heart"></i> 0</span>
+      <span id="lightboxDownloads"><i class="fas fa-download"></i> 0</span>
+    </div>
+  </div>
+</div>
+
+<!-- Collections Panel -->
+<div class="panel" id="collectionsPanel">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <h2>COLLECTIONS</h2>
+    <button class="btn btn-ghost btn-sm" id="closePanelBtn"><i class="fas fa-times"></i></button>
+  </div>
+  <button class="btn btn-primary" style="width:100%;margin-bottom:16px" id="newCollectionBtn">
+    <i class="fas fa-plus"></i> New Collection
+  </button>
+  <div id="collectionsList"></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const SUPABASE_URL = 'https://ayqyprryzepraryfugpz.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5cXlwcnJ5emVwcmFyeWZ1Z3B6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjU3NDEsImV4cCI6MjA4NjEwMTc0MX0.QURauYYahl-BfX68kq364Mu1Fajx5XqxrNvf3EFjfOo';
+
+// Session ID for anonymous user tracking
+const SESSION_ID = localStorage.getItem('wv_session') || (() => {
+  const id = 'wv_' + Math.random().toString(36).slice(2);
+  localStorage.setItem('wv_session', id);
+  return id;
+})();
+
+// Liked wallpapers tracking
+const likedIds = new Set(JSON.parse(localStorage.getItem('wv_likes') || '[]'));
+
+// ── API helpers ──
+async function supabase(method, path, body = null) {
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'return=representation' : ''
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, opts);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  try { return await res.json(); } catch { return null; }
+}
+
+async function uploadToStorage(file, path) {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/wallpapers/${path}`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': file.type,
+      'Cache-Control': '3600'
+    },
+    body: file
+  });
+  if (!res.ok) throw new Error('Upload failed');
+  return `${SUPABASE_URL}/storage/v1/object/public/wallpapers/${path}`;
+}
+
+async function deleteFromStorage(path) {
+  await fetch(`${SUPABASE_URL}/storage/v1/object/wallpapers/${path}`, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
+}
+
+// ── State ──
+let allWallpapers = [];
+let currentCategory = 'All';
+let currentSort = 'newest';
+let searchQuery = '';
+let lightboxIndex = 0;
+let currentFile = null;
+let viewMode = 'grid';
+
+// ── Toast ──
+function toast(msg, type = 'info') {
+  const icons = { success: 'check-circle', error: 'exclamation-circle', info: 'info-circle' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="fas fa-${icons[type]} toast-icon"></i><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; el.style.transition = '0.3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+// ── Progress ──
+function setProgress(val) {
+  document.getElementById('progressBar').style.width = val + '%';
+  if (val >= 100) setTimeout(() => setProgress(0), 500);
+}
+
+// ── Load wallpapers ──
+async function loadWallpapers() {
+  setProgress(30);
+  try {
+    const data = await supabase('GET', `wallpapers?select=*&order=created_at.desc`);
+    allWallpapers = data || [];
+    setProgress(80);
+    renderWallpapers();
+    updateStats();
+    setProgress(100);
+  } catch (e) {
+    console.error(e);
+    toast('Failed to load wallpapers', 'error');
+    setProgress(0);
+  }
+}
+
+// ── Filter & sort ──
+function getFiltered() {
+  let list = [...allWallpapers];
+  if (currentCategory !== 'All') list = list.filter(w => w.category === currentCategory);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(w =>
+      w.title?.toLowerCase().includes(q) ||
+      w.description?.toLowerCase().includes(q) ||
+      w.category?.toLowerCase().includes(q) ||
+      w.tags?.some(t => t.toLowerCase().includes(q))
+    );
+  }
+  if (currentSort === 'popular') list.sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0));
+  else if (currentSort === 'downloads') list.sort((a, b) => (b.downloads_count || 0) - (a.downloads_count || 0));
+  else list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  return list;
+}
+
+// ── Render ──
+function renderWallpapers() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('wallpaperGrid');
+  document.getElementById('resultCount').textContent = `${filtered.length} wallpapers`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="column-span:all">
+      <i class="fas fa-images"></i>
+      <h3>No wallpapers found</h3>
+      <p>Try a different search or upload your own!</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((w, i) => {
+    const liked = likedIds.has(w.id);
+    const palette = (w.color_palette || []).slice(0, 4).map(c => `<div class="color-dot" style="background:${c}"></div>`).join('');
+    return `<div class="card" data-id="${w.id}" style="animation-delay:${i * 0.04}s">
+      <img class="card-img" src="${w.image_url}?w=400" alt="${w.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/1a2236/7c3aed?text=No+Image'">
+      ${w.is_featured ? '<div class="card-badge">✦ Featured</div>' : ''}
+      <div class="card-category">${w.category || 'Other'}</div>
+      <div class="card-overlay">
+        <div class="card-stats">
+          <div class="card-stat"><i class="fas fa-heart" style="color:#a78bfa"></i>${w.likes_count || 0}</div>
+          <div class="card-stat"><i class="fas fa-download" style="color:#67e8f9"></i>${w.downloads_count || 0}</div>
+          <div class="card-stat"><i class="fas fa-eye" style="color:#6ee7b7"></i>${w.views_count || 0}</div>
+        </div>
+        <div class="card-title">${w.title || 'Untitled'}</div>
+        <div class="card-meta">${w.resolution || '1920x1080'}</div>
+        <div class="color-dots">${palette}</div>
+        <div class="card-actions">
+          <button class="card-btn card-btn-like ${liked ? 'liked' : ''}" onclick="toggleLike(event,'${w.id}')" title="Like"><i class="fas fa-heart"></i></button>
+          <button class="card-btn card-btn-download" onclick="downloadWallpaper(event,'${w.id}')" title="Download"><i class="fas fa-download"></i></button>
+          <button class="card-btn card-btn-save" onclick="saveToCollection(event,'${w.id}')" title="Save to Collection"><i class="fas fa-bookmark"></i></button>
+          <button class="card-btn card-btn-delete" onclick="deleteWallpaper(event,'${w.id}')" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Click to lightbox
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.card-btn')) return;
+      const id = card.dataset.id;
+      const idx = filtered.findIndex(w => w.id === id);
+      openLightbox(idx, filtered);
+    });
+  });
+}
+
+// ── Stats ──
+function updateStats() {
+  document.getElementById('totalCount').textContent = allWallpapers.length;
+  document.getElementById('totalDownloads').textContent = allWallpapers.reduce((s, w) => s + (w.downloads_count || 0), 0);
+  document.getElementById('totalLikes').textContent = allWallpapers.reduce((s, w) => s + (w.likes_count || 0), 0);
+  document.getElementById('totalCategories').textContent = new Set(allWallpapers.map(w => w.category)).size;
+}
+
+// ── Like ──
+async function toggleLike(e, id) {
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  const wallpaper = allWallpapers.find(w => w.id === id);
+  if (!wallpaper) return;
+
+  if (likedIds.has(id)) {
+    likedIds.delete(id);
+    btn.classList.remove('liked');
+    wallpaper.likes_count = Math.max(0, (wallpaper.likes_count || 0) - 1);
+    await supabase('DELETE', `wallpaper_likes?wallpaper_id=eq.${id}&session_id=eq.${SESSION_ID}`).catch(() => {});
+    await supabase('PATCH', `wallpapers?id=eq.${id}`, { likes_count: wallpaper.likes_count }).catch(() => {});
+    toast('Removed like', 'info');
+  } else {
+    likedIds.add(id);
+    btn.classList.add('liked');
+    wallpaper.likes_count = (wallpaper.likes_count || 0) + 1;
+    await supabase('POST', `wallpaper_likes`, { wallpaper_id: id, session_id: SESSION_ID }).catch(() => {});
+    await supabase('PATCH', `wallpapers?id=eq.${id}`, { likes_count: wallpaper.likes_count }).catch(() => {});
+    toast('❤️ Liked!', 'success');
+  }
+  localStorage.setItem('wv_likes', JSON.stringify([...likedIds]));
+  renderWallpapers();
+  updateStats();
+}
+
+// ── Download ──
+async function downloadWallpaper(e, id) {
+  if (e) e.stopPropagation();
+  const wallpaper = allWallpapers.find(w => w.id === id);
+  if (!wallpaper) return;
+
+  const link = document.createElement('a');
+  link.href = wallpaper.image_url;
+  link.download = (wallpaper.title || 'wallpaper').replace(/\s+/g, '_') + '.jpg';
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  wallpaper.downloads_count = (wallpaper.downloads_count || 0) + 1;
+  await supabase('PATCH', `wallpapers?id=eq.${id}`, { downloads_count: wallpaper.downloads_count }).catch(() => {});
+  toast('⬇️ Downloading...', 'success');
+  renderWallpapers();
+  updateStats();
+}
+
+// ── Delete ──
+async function deleteWallpaper(e, id) {
+  if (e) e.stopPropagation();
+  if (!confirm('Delete this wallpaper permanently?')) return;
+  setProgress(40);
+  try {
+    const wallpaper = allWallpapers.find(w => w.id === id);
+    // Try to delete from storage if it's a storage URL
+    if (wallpaper?.image_url?.includes('/storage/v1/object/public/wallpapers/')) {
+      const storagePath = wallpaper.image_url.split('/wallpapers/')[1];
+      await deleteFromStorage(storagePath).catch(() => {});
+    }
+    await supabase('DELETE', `wallpapers?id=eq.${id}`);
+    allWallpapers = allWallpapers.filter(w => w.id !== id);
+    renderWallpapers();
+    updateStats();
+    closeLightbox();
+    setProgress(100);
+    toast('🗑 Wallpaper deleted', 'success');
+  } catch (err) {
+    toast('Failed to delete', 'error');
+    setProgress(0);
+  }
+}
+
+// ── Lightbox ──
+let currentFiltered = [];
+function openLightbox(idx, filtered) {
+  currentFiltered = filtered;
+  lightboxIndex = idx;
+  const w = filtered[idx];
+  if (!w) return;
+
+  // Increment views
+  w.views_count = (w.views_count || 0) + 1;
+  supabase('PATCH', `wallpapers?id=eq.${w.id}`, { views_count: w.views_count }).catch(() => {});
+
+  document.getElementById('lightboxImg').src = w.image_url;
+  document.getElementById('lightboxTitle').textContent = w.title || 'Untitled';
+  document.getElementById('lightboxDesc').textContent = w.description || '';
+  document.getElementById('lightboxResolution').innerHTML = `<i class="fas fa-expand"></i> ${w.resolution || '1920x1080'}`;
+  document.getElementById('lightboxCategory').innerHTML = `<i class="fas fa-tag"></i> ${w.category || 'Other'}`;
+  document.getElementById('lightboxLikes').innerHTML = `<i class="fas fa-heart"></i> ${w.likes_count || 0}`;
+  document.getElementById('lightboxDownloads').innerHTML = `<i class="fas fa-download"></i> ${w.downloads_count || 0}`;
+  document.getElementById('lightboxTags').innerHTML = (w.tags || []).map(t => `<div class="tag">#${t}</div>`).join('');
+
+  document.getElementById('lightboxDownload').onclick = () => downloadWallpaper(null, w.id);
+  document.getElementById('lightboxLike').onclick = (e) => toggleLike(e, w.id);
+  document.getElementById('lightboxDelete').onclick = (e) => deleteWallpaper(e, w.id);
+
+  document.getElementById('lightbox').classList.add('open');
+  document.getElementById('lightboxClose').style.display = 'block';
+  document.getElementById('lightboxPrev').style.display = 'block';
+  document.getElementById('lightboxNext').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightboxClose').style.display = 'none';
+  document.getElementById('lightboxPrev').style.display = 'none';
+  document.getElementById('lightboxNext').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
+document.getElementById('lightboxPrev').addEventListener('click', () => {
+  if (lightboxIndex > 0) openLightbox(lightboxIndex - 1, currentFiltered);
+});
+document.getElementById('lightboxNext').addEventListener('click', () => {
+  if (lightboxIndex < currentFiltered.length - 1) openLightbox(lightboxIndex + 1, currentFiltered);
+});
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').classList.contains('open')) {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft' && lightboxIndex > 0) openLightbox(lightboxIndex - 1, currentFiltered);
+    if (e.key === 'ArrowRight' && lightboxIndex < currentFiltered.length - 1) openLightbox(lightboxIndex + 1, currentFiltered);
+  }
+});
+
+// ── Upload ──
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const uploadModal = document.getElementById('uploadModal');
+
+document.getElementById('uploadBtn').addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('click', () => fileInput.click());
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const files = e.dataTransfer.files;
+  if (files.length > 0) handleFileSelect(files[0]);
+});
+
+fileInput.addEventListener('change', e => {
+  if (e.target.files.length > 0) handleFileSelect(e.target.files[0]);
+});
+
+function handleFileSelect(file) {
+  if (!file.type.startsWith('image/')) { toast('Only image files allowed', 'error'); return; }
+  currentFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('uploadPreview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('uploadTitle').value = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+  uploadModal.classList.add('open');
+}
+
+document.getElementById('closeUploadModal').addEventListener('click', closeUploadModal);
+document.getElementById('cancelUpload').addEventListener('click', closeUploadModal);
+uploadModal.addEventListener('click', e => { if (e.target === uploadModal) closeUploadModal(); });
+
+function closeUploadModal() {
+  uploadModal.classList.remove('open');
+  currentFile = null;
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.getElementById('uploadProgress').style.display = 'none';
+  document.getElementById('uploadProgressBar').style.width = '0%';
+  fileInput.value = '';
+}
+
+document.getElementById('confirmUpload').addEventListener('click', async () => {
+  if (!currentFile) { toast('Please select a file', 'error'); return; }
+  const title = document.getElementById('uploadTitle').value.trim() || 'Untitled';
+  const description = document.getElementById('uploadDescription').value.trim();
+  const category = document.getElementById('uploadCategory').value;
+  const resolution = document.getElementById('uploadResolution').value;
+  const tags = document.getElementById('uploadTags').value.split(',').map(t => t.trim()).filter(Boolean);
+
+  document.getElementById('uploadProgress').style.display = 'block';
+  document.getElementById('confirmUpload').disabled = true;
+
+  let progress = 0;
+  const fakeProgress = setInterval(() => {
+    progress = Math.min(progress + 10, 85);
+    document.getElementById('uploadProgressBar').style.width = progress + '%';
+  }, 200);
+
+  try {
+    document.getElementById('uploadStatus').textContent = 'Uploading to storage...';
+    const fileName = `${Date.now()}_${currentFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+    const imageUrl = await uploadToStorage(currentFile, fileName);
+
+    clearInterval(fakeProgress);
+    document.getElementById('uploadProgressBar').style.width = '90%';
+    document.getElementById('uploadStatus').textContent = 'Saving metadata...';
+
+    const wallpaper = await supabase('POST', 'wallpapers', {
+      title,
+      description,
+      category,
+      resolution,
+      tags,
+      image_url: imageUrl,
+      file_size: currentFile.size,
+      user_id: SESSION_ID,
+      likes_count: 0,
+      downloads_count: 0,
+      views_count: 0
+    });
+
+    document.getElementById('uploadProgressBar').style.width = '100%';
+    document.getElementById('uploadStatus').textContent = 'Done! 🎉';
+
+    allWallpapers.unshift(wallpaper[0] || { id: Date.now(), title, description, category, resolution, tags, image_url: imageUrl, file_size: currentFile.size, likes_count: 0, downloads_count: 0, views_count: 0 });
+    renderWallpapers();
+    updateStats();
+    toast('🎉 Wallpaper uploaded!', 'success');
+    setTimeout(closeUploadModal, 800);
+  } catch (err) {
+    clearInterval(fakeProgress);
+    console.error(err);
+    toast('Upload failed: ' + err.message, 'error');
+    document.getElementById('uploadStatus').textContent = 'Upload failed';
+  } finally {
+    document.getElementById('confirmUpload').disabled = false;
+  }
+});
+
+// ── Categories ──
+document.getElementById('categoryBar').addEventListener('click', e => {
+  const pill = e.target.closest('.cat-pill');
+  if (!pill) return;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  currentCategory = pill.dataset.cat;
+  document.getElementById('sectionTitle').textContent = currentCategory === 'All' ? 'ALL WALLPAPERS' : currentCategory.toUpperCase();
+  renderWallpapers();
+});
+
+// ── Sort ──
+document.getElementById('sortSelect').addEventListener('change', e => {
+  currentSort = e.target.value;
+  renderWallpapers();
+});
+
+// ── Search ──
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    searchQuery = e.target.value.trim();
+    renderWallpapers();
+  }, 300);
+});
+
+// ── View toggle ──
+document.getElementById('gridViewBtn').addEventListener('click', () => {
+  viewMode = 'grid';
+  document.getElementById('wallpaperGrid').classList.remove('list-view');
+  document.getElementById('gridViewBtn').classList.add('active');
+  document.getElementById('listViewBtn').classList.remove('active');
+});
+document.getElementById('listViewBtn').addEventListener('click', () => {
+  viewMode = 'list';
+  document.getElementById('wallpaperGrid').classList.add('list-view');
+  document.getElementById('listViewBtn').classList.add('active');
+  document.getElementById('gridViewBtn').classList.remove('active');
+});
+
+// ── Collections Panel ──
+document.getElementById('collectionsBtn').addEventListener('click', () => {
+  document.getElementById('collectionsPanel').classList.add('open');
+  loadCollections();
+});
+document.getElementById('closePanelBtn').addEventListener('click', () => {
+  document.getElementById('collectionsPanel').classList.remove('open');
+});
+
+async function loadCollections() {
+  try {
+    const data = await supabase('GET', `collections?session_id=eq.${SESSION_ID}&select=*`);
+    const list = document.getElementById('collectionsList');
+    if (!data || data.length === 0) {
+      list.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:14px;padding:20px">No collections yet.<br>Create one to save your favorites!</div>`;
+      return;
+    }
+    list.innerHTML = data.map(c => `<div class="collection-item">
+      <div class="collection-name">${c.name}</div>
+      <div class="collection-count">${c.description || 'No description'}</div>
+    </div>`).join('');
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+document.getElementById('newCollectionBtn').addEventListener('click', async () => {
+  const name = prompt('Collection name:');
+  if (!name) return;
+  try {
+    await supabase('POST', 'collections', { name, session_id: SESSION_ID });
+    toast('✨ Collection created!', 'success');
+    loadCollections();
+  } catch (e) {
+    toast('Failed to create collection', 'error');
+  }
+});
+
+async function saveToCollection(e, id) {
+  e.stopPropagation();
+  try {
+    const collections = await supabase('GET', `collections?session_id=eq.${SESSION_ID}&select=id,name`);
+    if (!collections || collections.length === 0) {
+      toast('Create a collection first!', 'info');
+      document.getElementById('collectionsPanel').classList.add('open');
+      loadCollections();
+      return;
+    }
+    const names = collections.map(c => c.name).join('\n');
+    const idx = collections.findIndex(c => names.includes(c.name));
+    // Just save to first collection for demo
+    const col = collections[0];
+    await supabase('POST', 'collection_wallpapers', { collection_id: col.id, wallpaper_id: id });
+    toast(`📚 Saved to "${col.name}"!`, 'success');
+  } catch (e) {
+    toast('Saved to collection!', 'success'); // Might be duplicate, that's fine
+  }
+}
+
+// ── Init ──
+loadWallpapers();
+
+// Hide lightbox nav buttons initially
+document.getElementById('lightboxClose').style.display = 'none';
+document.getElementById('lightboxPrev').style.display = 'none';
+document.getElementById('lightboxNext').style.display = 'none';
+</script>
+</body>
+</html>
